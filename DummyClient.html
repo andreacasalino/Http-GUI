@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <button id="btn" style="width: 200px; height: 20px;"> Say Hi </button>
+        <button id="btn2" style="width: 200px; height: 20px;"> Di Ciao </button>
+    </head>
+
+    <body>
+        <script>
+            let btn = document.getElementById("btn");
+            btn.addEventListener("click", ()=>{
+                const xhr = new XMLHttpRequest();
+                xhr.addEventListener('load', ()=>{
+                    try {
+                        console.log(xhr.response);
+                    } catch (error) {
+                        console.log('invalid reponse: ', error);
+                    }
+                });
+                xhr.addEventListener('error', ()=>{ console.log("error"); });
+                xhr.open('GET', 'http://localhost:3000/hi');
+                xhr.send();
+            });
+
+            let btn2 = document.getElementById("btn2");
+            btn2.addEventListener("click", ()=>{
+                const xhr = new XMLHttpRequest();
+                xhr.addEventListener('load', ()=>{
+                    try {
+                        console.log(xhr.response);
+                    } catch (error) {
+                        console.log('invalid reponse: ', error);
+                    }
+                });
+                xhr.addEventListener('error', ()=>{ console.log("error"); });
+                xhr.open('POST', 'http://localhost:3000/ci');
+                xhr.send('ciao dal client');
+            });
+
+        </script>
+    </body>
+</html>
