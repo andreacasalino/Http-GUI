@@ -1,5 +1,4 @@
-#ifndef GUI_REQUEST_OPTION_H
-#define GUI_REQUEST_OPTION_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -22,5 +21,3 @@ namespace gui {
         std::map<char, std::vector<std::string>> options;
     };
 }
-
-#endif

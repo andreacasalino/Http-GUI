@@ -16,8 +16,8 @@ include(MakeLibrary)
 # set the project name
 project(http-gui)
 
-add_subdirectory(Lib)
+add_subdirectory(src)
 
 add_executable(DummyServer DummyServer.cpp)
-target_link_libraries(DummyServer Http-GUI)
+target_link_libraries(DummyServer HttpGui)
 
