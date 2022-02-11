@@ -32,16 +32,16 @@ TEST_CASE("RequestField from proto", "[request][field][io]") {
 TEST_CASE("Request from proto", "[request][io]") {
   SECTION("Positive tests") {
     const auto map = GENERATE(
-        gui::RequestMap{{"fieldA", gui::RequestField{"valueA"}},
+        gui::RequestContent{{"fieldA", gui::RequestField{"valueA"}},
                         {"fieldB", gui::RequestField{"valueB"}},
                         {"fieldC", gui::RequestField{"valueC"}}},
 
-        gui::RequestMap{{"fieldA", gui::RequestField{"valueA"}},
+        gui::RequestContent{{"fieldA", gui::RequestField{"valueA"}},
                         {"fieldB", gui::RequestField{std::vector<std::string>{
                                        "valueB1", "valueB2"}}},
                         {"fieldC", gui::RequestField{"valueC"}}},
 
-        gui::RequestMap{
+        gui::RequestContent{
             {"fieldA", gui::RequestField{"valueA"}},
             {"fieldB",
              gui::RequestField{std::vector<std::string>{"valueB1", "valueB2"}}},
@@ -54,7 +54,7 @@ TEST_CASE("Request from proto", "[request][io]") {
 
     gui::Request request = as_json.get<gui::Request>();
 
-    CHECK(request.getFields() == map);
+    CHECK(request.getContent() == map);
   }
 
   SECTION("Negative tests") {
