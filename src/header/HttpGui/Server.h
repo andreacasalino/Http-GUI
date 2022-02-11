@@ -10,7 +10,7 @@ using Actions = std::unordered_map<std::string, Action>;
 
 class Server {
 public:
-  void run(const std::size_t port);
+  void run(const std::size_t port, const std::string& logFileName = "");
 
 protected:
   Server() = default;
