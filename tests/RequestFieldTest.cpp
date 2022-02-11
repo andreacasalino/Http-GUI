@@ -3,7 +3,7 @@
 
 #include <HttpGui/Request.h>
 
-TEST_CASE("Request::Field size", "[request][field]") {
+TEST_CASE("RequestField size", "[request][field]") {
 
   SECTION("single string") { CHECK(gui::RequestField{"hello"}.size() == 1); }
 
@@ -17,7 +17,7 @@ TEST_CASE("Request::Field size", "[request][field]") {
   }
 }
 
-TEST_CASE("Request::Field operator*", "[request][field]") {
+TEST_CASE("RequestField operator*", "[request][field]") {
 
   SECTION("single string") {
     const std::string value = "hello";
@@ -37,7 +37,7 @@ TEST_CASE("Request::Field operator*", "[request][field]") {
   }
 }
 
-TEST_CASE("Request::Field operator[]", "[request][field]") {
+TEST_CASE("RequestField operator[]", "[request][field]") {
 
   const auto position = GENERATE(0, 1, 2);
 
