@@ -109,6 +109,14 @@ Request::Request(RequestContent &&fields) { this->fields = std::move(fields); }
 
 bool Request::isNull() const { return this->fields.empty(); }
 
+const RequestField* Request::operator[](const std::string& field_name) const {
+    auto it = fields.find(field_name);
+    if (it == fields.end()) {
+        return nullptr;
+    }
+    return &it->second;
+}
+
 void from_json(const nlohmann::json &j, Request &r) {
   if (j.is_string() && j.get<std::string>().empty()) {
     r = std::move(Request{});

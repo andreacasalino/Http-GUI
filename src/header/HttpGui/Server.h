@@ -15,7 +15,10 @@ public:
 protected:
   Server() = default;
 
-  virtual Actions getPossibleActions() = 0;
+  virtual Actions getPOSTActions() = 0;
+  virtual Actions getGETActions() = 0;
+
+  add default stop action
 
 private:
   std::mutex consumed_ports_mtx;

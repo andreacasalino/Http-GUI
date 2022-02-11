@@ -39,6 +39,12 @@ namespace {
         std::optional<std::ofstream> log_stream;
         const std::size_t port;
     };
+
+    std::string make_action_name(const std::string& name) {
+        std::stringstream stream;
+        stream << '/' << name;
+        return stream.str();
+    }
 }
 
 void Server::run(const std::size_t port, const std::string& logFileName) {
@@ -67,7 +73,7 @@ void Server::run(const std::size_t port, const std::string& logFileName) {
 
   // register actions to server
   for (const auto &[name, action] : actions) {
-    svr.Post("/getJSON", [&action = action, this, &port, &logger](const httplib::Request &req,
+    svr.Post(make_action_name(name).c_str(), [&action = action, this, &port, &logger](const httplib::Request &req,
                                                   httplib::Response &res) {
       std::scoped_lock lock(this->actions_execution_mtx);
       logger.log("INFO", INFO_COLOR, req.body);

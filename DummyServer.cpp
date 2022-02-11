@@ -1,30 +1,44 @@
-#include <httplib.h>
+#include <HttpGui/Server.h>
 #include <iostream>
 
-using namespace httplib;
-using namespace std;
+class ServerSample  : public gui::Server {
+public:
+    ServerSample() = default;
 
-int main(void) {
+protected:
+    gui::Actions getPossibleActions() override {
+        gui::Actions actions;
+        auto* persons_ptr = &persons;
 
-  Server svr;
+        actions.emplace("Add", [persons_ptr](const gui::Request& req, gui::Response& resp) {
+            auto* name = req["name"];
+            if (nullptr == name) {
+                throw std::runtime_error{"name not specified"};
+            }
+            auto* surname = req["surname"];
+            if (nullptr == surname) {
+                throw std::runtime_error{ "surname not specified" };
+            }
+            nlohmann::json new_person;
+            new_person["name"] = **name;
+            new_person["surname"] = **surname;
+            persons_ptr->push_back(new_person);
+            // resp assumed null as never differently set
+        });
 
-  svr.Get("/hi", [](const Request& req, Response& res) {
-    res.set_content("Hello World!", "text/plain");
-    res.set_header("Access-Control-Allow-Origin", "*");
-  });
+        actions.emplace("Get", [persons_ptr](const gui::Request& req, gui::Response& resp) {
+            resp = *persons_ptr;
+        });
 
-  svr.Post("/ci", [](const Request& req, Response& res) {
-    cout << "body: " << req.body << endl;
+        return actions;
+    }
 
-    res.set_content("Ciao a tutti!", "text/plain");
-    res.set_header("Access-Control-Allow-Origin", "*");
-  });
+    std::vector<nlohmann::json> persons;
+};
 
-  svr.Get("/stop", [&](const Request& req, Response& res) {
-    svr.stop();
-  });
+int main() {
+  ServerSample server;
+  server.run(52000);
 
-  svr.listen("localhost", 3000);
-
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
