@@ -43,7 +43,7 @@ namespace {
 
 void Server::run(const std::size_t port, const std::string& logFileName) {
   {
-    std::scoped_lock(consumed_ports_mtx);
+    std::scoped_lock lock(consumed_ports_mtx);
     auto it_port = consumed_ports.find(port);
     if (it_port != consumed_ports.end()) {
       std::stringstream message;
@@ -54,7 +54,7 @@ void Server::run(const std::size_t port, const std::string& logFileName) {
   }
 
   {
-    std::scoped_lock(actions_mtx);
+    std::scoped_lock lock(actions_mtx);
     if (!actions_init_done) {
       actions = getPossibleActions();
       actions_init_done = true;
@@ -69,7 +69,7 @@ void Server::run(const std::size_t port, const std::string& logFileName) {
   for (const auto &[name, action] : actions) {
     svr.Post("/getJSON", [&action = action, this, &port, &logger](const httplib::Request &req,
                                                   httplib::Response &res) {
-      std::scoped_lock(this->actions_execution_mtx);
+      std::scoped_lock lock(this->actions_execution_mtx);
       logger.log("INFO", INFO_COLOR, req.body);
       res.set_header("Access-Control-Allow-Origin", "*");
       nlohmann::json gui_response;
