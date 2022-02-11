@@ -5,14 +5,14 @@
 
 TEST_CASE("Request::Field size", "[request][field]") {
 
-  SECTION("single string") { CHECK(gui::Request::Field{"hello"}.size() == 1); }
+  SECTION("single string") { CHECK(gui::RequestField{"hello"}.size() == 1); }
 
   SECTION("string vector") {
     const auto values =
         GENERATE(std::vector<std::string>{}, std::vector<std::string>{"hello"},
                  std::vector<std::string>{"hello", "world"});
 
-    gui::Request::Field field(values);
+    gui::RequestField field(values);
     CHECK(field.size() == values.size());
   }
 }
@@ -22,7 +22,7 @@ TEST_CASE("Request::Field operator*", "[request][field]") {
   SECTION("single string") {
     const std::string value = "hello";
 
-    gui::Request::Field field(value);
+    gui::RequestField field(value);
     CHECK(*field == value);
   }
 
@@ -32,7 +32,7 @@ TEST_CASE("Request::Field operator*", "[request][field]") {
                  std::vector<std::string>{"hello", "world"},
                  std::vector<std::string>{"hello", "world", "hello", "world"});
 
-    gui::Request::Field field(values);
+    gui::RequestField field(values);
     CHECK(*field == values.front());
   }
 }
@@ -44,7 +44,7 @@ TEST_CASE("Request::Field operator[]", "[request][field]") {
   SECTION("single string") {
     const std::string value = "hello";
 
-    gui::Request::Field field(value);
+    gui::RequestField field(value);
     CHECK(field[position] == value);
   }
 
@@ -52,7 +52,7 @@ TEST_CASE("Request::Field operator[]", "[request][field]") {
     const std::vector<std::string> values =
         std::vector<std::string>{"hello", "world", "hello", "world"};
 
-    gui::Request::Field field(values);
+    gui::RequestField field(values);
     CHECK(field[position] == values[position]);
   }
 }

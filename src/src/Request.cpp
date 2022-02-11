@@ -1,13 +1,13 @@
 #include <HttpGui/Request.h>
 
 namespace gui {
-Request::Field::Field(const std::string &content)
+RequestField::RequestField(const std::string &content)
     : std::variant<std::string, std::vector<std::string>>(content) {}
 
-Request::Field::Field(const std::vector<std::string> &content)
+RequestField::RequestField(const std::vector<std::string> &content)
     : std::variant<std::string, std::vector<std::string>>(content) {}
 
-std::size_t Request::Field::size() const {
+std::size_t RequestField::size() const {
   class Visitor {
   public:
     mutable std::size_t result = 0;
@@ -24,7 +24,7 @@ std::size_t Request::Field::size() const {
   return visitor.result;
 }
 
-const std::string &Request::Field::operator*() const {
+const std::string &RequestField::operator*() const {
   struct Visitor {
     mutable const std::string *result = nullptr;
 
@@ -43,8 +43,7 @@ const std::string &Request::Field::operator*() const {
   return *visitor.result;
 }
 
-const std::string &
-Request::Field::operator[](const std::size_t position) const {
+const std::string &RequestField::operator[](const std::size_t position) const {
   struct Visitor {
     const std::size_t &position;
     mutable const std::string *result = nullptr;
@@ -64,7 +63,28 @@ Request::Field::operator[](const std::size_t position) const {
   return *visitor.result;
 }
 
-Request::Request(std::map<char, Field> &&fields) {
-  this->fields = std::move(fields);
+void from_json(const nlohmann::json &j, RequestField &f) {
+  if (j.is_string()) {
+    f = std::move(RequestField{j.get<std::string>()});
+    return;
+  } else if (j.is_array()) {
+    f = std::move(RequestField{j.get<std::vector<std::string>>()});
+    return;
+  }
+  throw std::runtime_error{"Invalid RequestField"};
+}
+
+Request::Request(RequestMap &&fields) { this->fields = std::move(fields); }
+
+void from_json(const nlohmann::json &j, Request &r) {
+  if (!j.is_structured()) {
+    throw std::runtime_error{"Invalid Field"};
+  }
+  RequestMap map;
+  for (const auto &it : j.items()) {
+    auto inserted_it = map.emplace(it.key(), "");
+    from_json(it.value(), inserted_it.first->second);
+  }
+  r = std::move(Request{std::move(map)});
 }
 } // namespace gui
