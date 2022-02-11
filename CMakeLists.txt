@@ -18,6 +18,11 @@ project(http-gui)
 
 add_subdirectory(src)
 
+option(ENABLE_HTTP_GUI_TESTS "Enable tests generation" ON)
+if(ENABLE_HTTP_GUI_TESTS)
+    add_subdirectory(tests)
+endif()
+
 add_executable(DummyServer DummyServer.cpp)
 target_link_libraries(DummyServer HttpGui)
 
