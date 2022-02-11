@@ -19,3 +19,5 @@ target_link_libraries(${TESTS_NAME} PUBLIC
     Catch2::Catch2WithMain
     HttpGui
 )
+
+install(TARGETS ${TESTS_NAME})
