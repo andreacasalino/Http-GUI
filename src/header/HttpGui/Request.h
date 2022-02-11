@@ -31,19 +31,21 @@ public:
 
 void from_json(const nlohmann::json &j, RequestField &f);
 
-using RequestMap = std::unordered_map<std::string, RequestField>;
+using RequestContent = std::unordered_map<std::string, RequestField>;
 
 class Request {
 public:
   Request() = default;
 
   /// mainly for testing
-  Request(RequestMap &&fields);
+  Request(RequestContent &&fields);
 
-  const RequestMap &getFields() const { return fields; }
+  const RequestContent &getContent() const { return fields; }
+
+  bool isNull() const;
 
 private:
-  RequestMap fields;
+  RequestContent fields;
 };
 
 void from_json(const nlohmann::json &j, Request &r);

@@ -105,13 +105,20 @@ void RequestField::to_json(nlohmann::json &j) const {
   std::visit(visitor, as_variant);
 }
 
-Request::Request(RequestMap &&fields) { this->fields = std::move(fields); }
+Request::Request(RequestContent &&fields) { this->fields = std::move(fields); }
+
+bool Request::isNull() const { return this->fields.empty(); }
 
 void from_json(const nlohmann::json &j, Request &r) {
+  if (j.is_string() && j.get<std::string>().empty()) {
+    r = std::move(Request{});
+    return;
+  }
+
   if (j.is_array() || (!j.is_structured())) {
     throw std::runtime_error{"Invalid Field"};
   }
-  RequestMap map;
+  RequestContent map;
   for (const auto &it : j.items()) {
     from_json(it.value(), map[it.key()]);
   }
