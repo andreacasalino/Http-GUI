@@ -19,8 +19,11 @@ make_action_for_server_registering(std::mutex &action_mtx, ServerLogger &logger,
     res.set_header("Access-Control-Allow-Origin", "*");
     nlohmann::json gui_response;
     try {
-      nlohmann::json json_request = nlohmann::json::parse(req.body);
-      gui::Request gui_request = json_request.get<gui::Request>();
+      gui::Request gui_request;
+      if (!req.body.empty()) {
+        nlohmann::json json_request = nlohmann::json::parse(req.body);
+        gui_request = json_request.get<gui::Request>();
+      }
       action(gui_request, gui_response);
       auto gui_response_string = gui_response.dump();
       logger.log_info(

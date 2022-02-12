@@ -1,6 +1,16 @@
 #include <HttpGui/Server.h>
 #include <iostream>
 
+struct Person {
+  std::string name;
+  std::string surname;
+};
+
+void to_json(nlohmann::json &recipient, const Person &person) {
+  recipient["name"] = person.name;
+  recipient["surname"] = person.surname;
+}
+
 class ServerSample : public gui::Server {
 public:
   ServerSample() = default;
@@ -19,10 +29,7 @@ protected:
           if (nullptr == surname) {
             throw std::runtime_error{"surname not specified"};
           }
-          nlohmann::json new_person;
-          new_person["name"] = **name;
-          new_person["surname"] = **surname;
-          persons_ptr->push_back(new_person);
+          persons_ptr->push_back(Person{**name, **surname});
           // resp assumed null as never differently set
         });
     return actions;
@@ -35,11 +42,10 @@ protected:
         "Get", [persons_ptr](const gui::Request &req, gui::Response &resp) {
           resp = *persons_ptr;
         });
-
     return actions;
   }
 
-  std::vector<nlohmann::json> persons;
+  std::vector<Person> persons;
 };
 
 int main() {

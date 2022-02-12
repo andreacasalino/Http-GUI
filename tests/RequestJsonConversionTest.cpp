@@ -30,16 +30,24 @@ TEST_CASE("RequestField from proto", "[request][field][io]") {
 }
 
 TEST_CASE("Request from proto", "[request][io]") {
+  SECTION("null request") {
+    std::string null_string = "null";
+    auto null_json = nlohmann::json::parse(null_string);
+    gui::Request request = null_json.get<gui::Request>();
+    CHECK(request.isNull());
+  }
+
   SECTION("Positive tests") {
     const auto map = GENERATE(
         gui::RequestContent{{"fieldA", gui::RequestField{"valueA"}},
-                        {"fieldB", gui::RequestField{"valueB"}},
-                        {"fieldC", gui::RequestField{"valueC"}}},
+                            {"fieldB", gui::RequestField{"valueB"}},
+                            {"fieldC", gui::RequestField{"valueC"}}},
 
-        gui::RequestContent{{"fieldA", gui::RequestField{"valueA"}},
-                        {"fieldB", gui::RequestField{std::vector<std::string>{
-                                       "valueB1", "valueB2"}}},
-                        {"fieldC", gui::RequestField{"valueC"}}},
+        gui::RequestContent{
+            {"fieldA", gui::RequestField{"valueA"}},
+            {"fieldB",
+             gui::RequestField{std::vector<std::string>{"valueB1", "valueB2"}}},
+            {"fieldC", gui::RequestField{"valueC"}}},
 
         gui::RequestContent{
             {"fieldA", gui::RequestField{"valueA"}},

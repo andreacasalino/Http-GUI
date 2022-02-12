@@ -31,7 +31,7 @@
                 const xhr = new XMLHttpRequest();
                 xhr.addEventListener('load', ()=>{
                     try {
-                        console.log(xhr.response);
+                        console.log(JSON.parse(xhr.response));
                     } catch (error) {
                         console.log('invalid reponse: ', error);
                     }

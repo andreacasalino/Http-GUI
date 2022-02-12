@@ -26,7 +26,7 @@ SET(BUILD_COLORED_STREAM_SAMPLES OFF CACHE BOOL "" FORCE)
 FetchContent_Declare(
 	colored_stream
 	GIT_REPOSITORY https://github.com/andreacasalino/ColoredStream.git
-	GIT_TAG        4c7fcf010c73833473cfc4411299504108e00c52
+	GIT_TAG        a19d2bb2f1a5ccd61b594d7dcfc4ad8b9dd543ce
 )
 FetchContent_MakeAvailable(colored_stream)
 target_link_libraries(${PROJECT_SHORTNAME} PRIVATE

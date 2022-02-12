@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ColoredStream/ColoredStream.hpp>
+#include <ColoredStream/ColoredStream.h>
 #include <fstream>
 #include <iostream>
 #include <optional>
