@@ -44,7 +44,7 @@ public:
 
   bool isNull() const;
 
-  const RequestField* operator[](const std::string& field_name) const;
+  const RequestField &operator[](const std::string &field_name) const;
 
 private:
   RequestContent fields;

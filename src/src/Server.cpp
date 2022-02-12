@@ -1,12 +1,17 @@
 #include "ServerLogger.h"
 #include "StringMerger.h"
 #include "httplib.h"
-#include <HttpGui/BadResponse.h>
 #include <HttpGui/Definitions.h>
 #include <HttpGui/Server.h>
 
 namespace gui {
 namespace {
+nlohmann::json make_bad_response(const std::string &reason) {
+  nlohmann::json result;
+  result[EXCEPTION_RESPONSE_KEYWORD] = reason;
+  return result;
+}
+
 httplib::Server::Handler
 make_action_for_server_registering(std::mutex &action_mtx, ServerLogger &logger,
                                    const std::string &action_name,

@@ -21,15 +21,9 @@ protected:
     auto *persons_ptr = &persons;
     actions.emplace(
         "Add", [persons_ptr](const gui::Request &req, gui::Response &resp) {
-          auto *name = req["name"];
-          if (nullptr == name) {
-            throw std::runtime_error{"name not specified"};
-          }
-          auto *surname = req["surname"];
-          if (nullptr == surname) {
-            throw std::runtime_error{"surname not specified"};
-          }
-          persons_ptr->push_back(Person{**name, **surname});
+          auto &name = req["name"];
+          auto &surname = req["surname"];
+          persons_ptr->push_back(Person{*name, *surname});
           // resp assumed null as never differently set
         });
     return actions;

@@ -1,4 +1,5 @@
 #include <HttpGui/Request.h>
+#include <sstream>
 
 namespace gui {
 RequestField::RequestField() : RequestField("") {}
@@ -35,6 +36,9 @@ const std::string &RequestField::operator*() const {
     };
 
     void operator()(const std::vector<std::string> &as_vector) const {
+      if (as_vector.empty()) {
+        throw std::runtime_error{"Empty vector"};
+      }
       result = &as_vector.front();
     };
   };
@@ -55,6 +59,9 @@ const std::string &RequestField::operator[](const std::size_t position) const {
     };
 
     void operator()(const std::vector<std::string> &as_vector) const {
+      if (as_vector.size() <= position) {
+        throw std::runtime_error{"Invalid vector position"};
+      }
       result = &as_vector[this->position];
     };
   };
@@ -109,12 +116,14 @@ Request::Request(RequestContent &&fields) { this->fields = std::move(fields); }
 
 bool Request::isNull() const { return this->fields.empty(); }
 
-const RequestField *Request::operator[](const std::string &field_name) const {
+const RequestField &Request::operator[](const std::string &field_name) const {
   auto it = fields.find(field_name);
   if (it == fields.end()) {
-    return nullptr;
+    std::stringstream error;
+    error << field_name << " is not an existing request field";
+    throw std::runtime_error{error.str()};
   }
-  return &it->second;
+  return it->second;
 }
 
 void from_json(const nlohmann::json &j, Request &r) {
