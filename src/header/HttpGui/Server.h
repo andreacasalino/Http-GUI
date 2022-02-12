@@ -1,3 +1,5 @@
+#pragma once
+
 #include <HttpGui/Request.h>
 #include <functional>
 #include <mutex>

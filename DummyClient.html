@@ -6,19 +6,24 @@
 
     <body>
         <script>
+            function askForInput(message) {
+                let value = prompt(message, "-");
+                return value;
+            }
+
+            function askForNewPerson() {
+                let name = askForInput("Insert name of the person to add: ");
+                let surname = askForInput("Insert surname of the person to add: ");
+                return {"name":name, "surname":surname};
+            }
+
             let btnAdd = document.getElementById("btnAdd");
             btnAdd.addEventListener("click", ()=>{
+                let new_person = askForNewPerson();
                 const xhr = new XMLHttpRequest();
-                xhr.addEventListener('load', ()=>{
-                    try {
-                        console.log(xhr.response);
-                    } catch (error) {
-                        console.log('invalid reponse: ', error);
-                    }
-                });
                 xhr.addEventListener('error', ()=>{ console.log("error"); });
-                xhr.open('POST', 'http://localhost:52000/hi');
-                xhr.send();
+                xhr.open('POST', 'http://localhost:52000/Add');
+                xhr.send(JSON.stringify(new_person));
             });
 
             let btnGet = document.getElementById("btnGet");
@@ -32,8 +37,8 @@
                     }
                 });
                 xhr.addEventListener('error', ()=>{ console.log("error"); });
-                xhr.open('POST', 'http://localhost:52000/ci');
-                xhr.send('ciao dal client');
+                xhr.open('GET', 'http://localhost:52000/Get');
+                xhr.send();
             });
 
         </script>
