@@ -16,8 +16,15 @@ include(MakeLibrary)
 # set the project name
 project(http-gui)
 
-add_subdirectory(Lib)
+add_subdirectory(src)
 
-add_executable(DummyServer DummyServer.cpp)
-target_link_libraries(DummyServer Http-GUI)
+option(ENABLE_HTTP_GUI_TESTS "Enable tests generation" OFF)
+if(ENABLE_HTTP_GUI_TESTS)
+    add_subdirectory(tests)
+endif()
 
+option(ENABLE_HTTP_GUI_DUMMY_SAMPLE "Enable dummy sample generation" OFF)
+if(ENABLE_HTTP_GUI_DUMMY_SAMPLE)
+    add_executable(DummyServer DummyServer.cpp)
+    target_link_libraries(DummyServer HttpGui)
+endif()
